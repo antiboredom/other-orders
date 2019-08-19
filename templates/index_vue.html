@@ -1,0 +1,65 @@
+<!doctype html>
+<html lang="en">
+
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+  <title>Some Sorts</title>
+  <meta name="description" content="">
+  <meta name="author" content="">
+
+  <link rel="stylesheet" href="/static/style.css?v=1.0">
+  <script src="/static/vue.js"></script>
+</head>
+
+<body>
+  <div class="container" id="app">
+    <div v-if="loading" id="loading"><p>Loading</p></div>
+
+    <h1>Other Orders (1)</h1>
+    <div class="sorters">
+
+      Sorting items by:
+
+      <button v-for="sort in sorts" :class="{sorter: true, selected: sort==sorter}" @click="onSort(sort, $event)">
+        <% sort.display %>
+        <span v-if="reversed">From <% sort.orders[1] %> to <% sort.orders[0] %></span>
+        <span v-else>From <% sort.orders[0] %> to <% sort.orders[1] %></span>
+      </button>
+
+      <select v-model="reversed">
+        <option :value="false">Order from <% sorter.orders[0] %> to <% sorter.orders[1] %></option>
+        <option :value="true">Order from <% sorter.orders[1] %> to <% sorter.orders[0] %></option>
+      </select>
+
+      <button @click="fetch">Refresh</button>
+    </div>
+
+    <table border="1">
+      <tr>
+        <th>Date</th>
+        <th>User</th>
+        <th>Content</th>
+        <th>Favorites</th>
+        <th>Retweets</th>
+        <th></th>
+      </tr>
+      <tr v-for="tweet in sortedTweets">
+        <td class="date"><% tweet.created_at %></td>
+        <td class="username"><a :href="'https://twitter.com/' + tweet.screen_name" target="_blank"><% tweet.name %></a></td>
+        <td class="text">
+          <p><% tweet.text %></p>
+          <a v-for="media in tweet.media" class="thumb" :href=" media.media_url_https" target="_blank"><img :src="media.media_url_https + ':thumb'"></a>
+        </td>
+        <td class="fav"><% tweet.favorites %></td>
+        <td class="retweet"><% tweet.retweets %></td>
+        <td class="link"><a :href="'https://twitter.com/' + tweet.screen_name + '/status/' + tweet.tweet_id" target="_blank">go</a></td>
+      </tr>
+    </table>
+  </div>
+  <script src="/static/app.js"></script>
+</body>
+
+</html>
+

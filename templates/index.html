@@ -1,0 +1,75 @@
+<!doctype html>
+<html lang="en">
+
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+  <title>Some Sorts</title>
+  <meta name="description" content="">
+  <meta name="author" content="">
+
+  <link rel="stylesheet" href="/static/style.css?v=1.0">
+  <script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
+</head>
+
+<body>
+  <div class="container">
+    <div class="sorters">
+      <form action="/" method="get">
+
+        <select name="sort">
+          {% for sort in sorts %}
+            <option {% if sorter==sort["qs"] %} selected {% endif %} value="{{ sort["qs"] }}">{{ sort["display"] }}</option>
+          {% endfor %}
+        </select>
+
+        <select name="reverse">
+          <option {% if reverse==False %} selected {% endif %} value="false">Order low to high</option>
+          <option {% if reverse==True %} selected {% endif %} value="true">Order high to low</option>
+        </select>
+
+        <br>
+
+        <!-- {% for sort_name in sort_names %} -->
+        <!--   <button {% if sorter==sort_name %}class="selected"{% endif %}>{{ sort_name }}</button> -->
+        <!-- {% endfor %} -->
+
+        <input type="submit">
+
+        <input type="hidden" value="{{ testing }}" name="testing">
+      </form>
+    </div>
+
+    <table border="1">
+      <tr>
+        <th>Date</th>
+        <th>User</th>
+        <th>Content</th>
+        <th>Favorites</th>
+        <th>Retweets</th>
+        <th></th>
+      </tr>
+      {% for tweet in tweets %}
+        <tr>
+          <td class="date">{{ tweet["created_at"] }}</td>
+          <td class="username"><a href="https://twitter.com/{{tweet.original["user"]["screen_name"]}}" target="_blank">{{ tweet.original["user"]["name"] }}</a></td>
+          <td class="text">
+            <p>{{ tweet.text }}</p>
+            {% for media in tweet.original.get("extended_entities", {}).get("media", []) %}
+              <a class="thumb" href="{{ media["media_url_https"] }}" target="_blank"><img src="{{ media["media_url_https"] }}:thumb"></a>
+            {% endfor %}
+            <p>
+            {{ tweet.__label__CommissBratton }}<br>
+            </p>
+          </td>
+          <td class="fav">{{ tweet.favorites }}</td>
+          <td class="retweet">{{ tweet.retweets }}</td>
+          <td class="link"><a href="https://twitter.com/{{tweet.original["user"]["screen_name"]}}/status/{{tweet.original["id"]}}" target="_blank">></a></td>
+        </tr>
+      {% endfor %}
+    </table>
+  </div>
+</body>
+
+</html>
