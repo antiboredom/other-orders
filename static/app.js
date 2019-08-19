@@ -150,8 +150,8 @@ let app = new Vue({
       this.loading = true;
 
       let xhr = new XMLHttpRequest();
-      xhr.open('GET', '/tweets?testing=true');
-      // xhr.open('GET', '/tweets');
+      // xhr.open('GET', '/tweets?testing=true');
+      xhr.open('GET', '/tweets');
       xhr.setRequestHeader('Content-Type', 'application/json');
       xhr.onload = () => {
         if (xhr.status === 200) {

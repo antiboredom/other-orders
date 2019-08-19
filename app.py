@@ -14,7 +14,7 @@ app.secret_key = os.environ["FLASK_SECRET"]
 
 CONSUMER_KEY = os.environ["TWITTER_CONSUMER_KEY"]
 CONSUMER_SECRET = os.environ["TWITTER_CONSUMER_SECRET"]
-CALLBACK_URL = "http://localhost:5000/callback"
+CALLBACK_URL = os.environ["CALLBACK_URL"]
 
 sorts = [
     {"qs": "chronological", "key": "created_at", "display": "Chronologically"},
