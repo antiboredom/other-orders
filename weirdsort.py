@@ -275,13 +275,17 @@ if __name__ == "__main__":
     import sys
     import os
     import json
+    import argparse
 
-    filename = sys.argv[1]
-    sort = sys.argv[2]
-    reverse = sys.argv[3]
+    parser = argparse.ArgumentParser(description='Other Orders sorts texts')
 
-    reverse = reverse == "reverse"
+    parser.add_argument('filename')
+    parser.add_argument('--sort', '-s', dest='sortname', required=True, help='Sort type', choices=sorted([s['qs'] for s in sorts]))
+    parser.add_argument('--reverse', '-r', action='store_true', dest='reversed', required=False, default=False, help="Sort from high to low rather than low to high")
 
+    args = parser.parse_args()
+
+    filename = args.filename
     outname = filename + ".analysis.json"
 
     if not os.path.exists(outname):
@@ -307,17 +311,17 @@ if __name__ == "__main__":
         with open(outname, "r") as infile:
             tagged_sentences = json.load(infile)
 
-    sort_params = next((s for s in sorts if s["qs"] == sort), sorts[0])
+    sort_params = next((s for s in sorts if s["qs"] == args.sortname), sorts[0])
 
     if isinstance(sort_params["key"], list):
         tagged_sentences = sorted(
             tagged_sentences,
             key=lambda k: sum([k[keyname] for keyname in sort_params["key"]]),
-            reverse=reverse,
+            reverse=args.reversed,
         )
     else:
         tagged_sentences = sorted(
-            tagged_sentences, key=lambda k: k[sort_params["key"]], reverse=reverse
+            tagged_sentences, key=lambda k: k[sort_params["key"]], reverse=args.reversed
         )
 
     for t in tagged_sentences:
