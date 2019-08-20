@@ -154,6 +154,12 @@ select {
   padding: 20px;
 }
 
+.top {
+  display: flex;
+  border-bottom: 1px solid #999;
+  justify-content: space-between;
+}
+
 @media (max-width: 768px) {
   td,
   th {
