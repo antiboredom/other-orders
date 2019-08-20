@@ -1,5 +1,6 @@
 env/
 .env
 *.pyc
+secretz.py
 __pycache__/
 start.sh

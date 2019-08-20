@@ -2,20 +2,18 @@ import json
 import os
 import re
 from datetime import datetime
-
 import tweepy
 from flask import Flask, jsonify, redirect, render_template, request, session
-
-# import analyzers
 import weirdsort
+import secretz
 
 app = Flask(__name__)
 
-app.secret_key = os.environ["FLASK_SECRET"]
+app.secret_key = secretz.FLASK_SECRET
 
-CONSUMER_KEY = os.environ["TWITTER_CONSUMER_KEY"]
-CONSUMER_SECRET = os.environ["TWITTER_CONSUMER_SECRET"]
-CALLBACK_URL = os.environ["CALLBACK_URL"]
+CONSUMER_KEY =    secretz.TWITTER_CONSUMER_KEY
+CONSUMER_SECRET = secretz.TWITTER_CONSUMER_SECRET
+CALLBACK_URL =    secretz.CALLBACK_URL
 
 sorts = [
     {"qs": "chronological", "key": "created_at", "display": "Chronologically"},
