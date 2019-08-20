@@ -7,6 +7,8 @@ from nltk.sentiment.vader import SentimentIntensityAnalyzer
 from sklearn.metrics.pairwise import cosine_similarity
 import fasttext
 import textstat
+import sentencepiece as spm
+
 
 use_tf = True
 
@@ -89,20 +91,51 @@ nlp = spacy.load("en_core_web_sm")
 if use_tf:
     g = tf.Graph()
     with g.as_default():
-        text_input = tf.placeholder(dtype=tf.string, shape=[None])
-        embed = hub.Module("https://tfhub.dev/google/universal-sentence-encoder/2")
-        embedded_text = embed(text_input)
+        text_input = tf.sparse_placeholder(tf.int64, shape=[None, None])
+        embed = hub.Module("https://tfhub.dev/google/universal-sentence-encoder-lite/2")
+        embedded_text = embed(
+            inputs=dict(
+                values=text_input.values,
+                indices=text_input.indices,
+                dense_shape=text_input.dense_shape,
+            )
+        )
         init_op = tf.group([tf.global_variables_initializer(), tf.tables_initializer()])
     g.finalize()
     session = tf.Session(graph=g)
     session.run(init_op)
+
+    spm_path = "/tmp/tfhub_modules/539544f0a997d91c327c23285ea00c37588d92cc/assets/universal_encoder_8k_spm.model"
+    sp = spm.SentencePieceProcessor()
+    sp.Load(spm_path)
+
+
+def process_to_IDs_in_sparse_format(sp, sentences):
+    # An utility method that processes sentences with the sentence piece processor
+    # 'sp' and returns the results in tf.SparseTensor-similar format:
+    # (values, indices, dense_shape)
+    ids = [sp.EncodeAsIds(x) for x in sentences]
+    max_len = max(len(x) for x in ids)
+    dense_shape = (len(ids), max_len)
+    values = [item for sublist in ids for item in sublist]
+    indices = [[row, col] for row in range(len(ids)) for col in range(len(ids[row]))]
+    return (values, indices, dense_shape)
 
 
 def get_cosine_similarities(texts):
     for archetype, text in archetypes:
         texts.append(text)
 
-    text_embeddings = session.run(embedded_text, feed_dict={text_input: texts})
+    values, indices, dense_shape = process_to_IDs_in_sparse_format(sp, texts)
+
+    text_embeddings = session.run(
+        embedded_text,
+        feed_dict={
+            text_input.values: values,
+            text_input.indices: indices,
+            text_input.dense_shape: dense_shape,
+        },
+    )
 
     similarity_matrix = cosine_similarity(np.array(text_embeddings))
 
@@ -255,7 +288,7 @@ if __name__ == "__main__":
         doc = nlp(data)
         sentences = [s.text for s in doc.sents]
         sentences = [s.strip() for s in sentences]
-        sentences = [s for s in sentences if s!="" and s!='"']
+        sentences = [s for s in sentences if s != "" and s != '"']
         results = analyze_lines(sentences)
         for i, r in enumerate(results):
             data = r.__dict__
@@ -285,7 +318,6 @@ if __name__ == "__main__":
     for t in tagged_sentences:
         print(t["text"])
 
-    #
     # tests = [
     #     "this is a test",
     #     "god is dead",
