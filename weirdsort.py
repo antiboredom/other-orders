@@ -34,6 +34,53 @@ archetypes = [
     ("shame", ". I'm sorry. I apologize. I feel regret, shame and embarrassment."),
 ]
 
+sorts = [
+    {"qs": "chronological", "key": "created_at", "display": "Chronologically"},
+    {"qs": "alphabetical", "key": "lower_text", "display": "Alphabetically"},
+    {"qs": "favorites", "key": "favorites", "display": "Total Favorites"},
+    {"qs": "retweets", "key": "retweets", "display": "Total Retweets"},
+    {"qs": "length", "key": "length", "display": "Length"},
+    {"qs": "hashtags", "key": "total_hashtags", "display": "Total Hashtags"},
+    {"qs": "username", "key": "username", "display": "Alphabetically by Username"},
+    {"qs": "userposts", "key": "total_userposts", "display": "Total User Posts"},
+    {"qs": "marx", "key": "marx", "display": "Most Marxist"},
+    {"qs": "kafka", "key": "kafka", "display": "Most Kafkaesque"},
+    {"qs": "shame", "key": "shame", "display": "Shame"},
+    {"qs": "ted", "key": "ted", "display": "TEDness"},
+    {"qs": "emoji", "key": "total_emoji", "display": "Total Emoji"},
+    {"qs": "nouns", "key": "total_noun", "display": "Noun Density"},
+    {"qs": "verbs", "key": "total_verb", "display": "Verb Density"},
+    {"qs": "adjectives", "key": "total_adj", "display": "Adjective Density"},
+    {"qs": "numbers", "key": "total_num", "display": "Number of Numbers"},
+    {
+        "qs": "stop_words",
+        "key": "total_stop",
+        "display": "Density of Filler Words/Percentage of Words Which Are Filler Words",
+    },
+    {"qs": "named_entities", "key": "total_entities", "display": "Proper Noun Density"},
+    {"qs": "antisemitism", "key": "antisemitism", "display": "Antisemitism"},
+    {"qs": "eroticism", "key": "erotic", "display": "Eroticism"},
+    # {
+    #     "qs": "word_length",
+    #     "key": "word_length",
+    #     "display": "Average Word Length",
+    # },
+    {"qs": "drilism", "key": "__label__dril", "display": "dril-ism"},
+    {"qs": "cop", "key": ["__label__CommissBratton"], "display": "Cop-Like"},
+    {"qs": "goth", "key": "__label__sosadtoday", "display": "Gothness"},
+    {
+        "qs": "neoliberal",
+        "key": ["__label__ThirdWayTweet", "__label__ChelseaClinton"],
+        "display": "Neoliberalism",
+    },
+    {
+        "qs": "advertising",
+        "key": ["__label__amazon"],
+        "display": "Similarity To Corporate Social Media Accounts",
+    },
+    {"qs": "gendered", "key": "total_gendered", "display": "Gendered"},
+]
+
 fast_model = fasttext.load_model("model_tweets.bin")
 sentiment_analyzer = SentimentIntensityAnalyzer()
 nlp = spacy.load("en_core_web_sm")
@@ -110,7 +157,7 @@ class Weirdsort:
         else:
             self.text = text.get(key)
 
-        self.text = self.text.replace('&amp;', '&')
+        self.text = self.text.replace("&amp;", "&")
         self.lower_text = self.text.lower()
         self.doc = nlp(self.text)
         self.total_tokens = len(self.doc)
@@ -187,14 +234,64 @@ class Weirdsort:
 
 
 if __name__ == "__main__":
-    tests = [
-        "this is a test",
-        "god is dead",
-        "he her she them",
-        "israel is bad",
-        "the police protect us",
-        "where is hope?",
-    ]
-    results = analyze_lines(tests)
-    for r in results:
-        print(r)
+    import sys
+    import os
+    import json
+
+    filename = sys.argv[1]
+    sort = sys.argv[2]
+    reverse = sys.argv[3]
+
+    reverse = reverse == "reverse"
+
+    outname = filename + ".analysis.json"
+
+    if not os.path.exists(outname):
+        tagged_sentences = []
+
+        with open(filename, "r") as infile:
+            data = infile.read()
+
+        doc = nlp(data)
+        sentences = [s.text for s in doc.sents]
+        results = analyze_lines(sentences)
+        for i, r in enumerate(results):
+            data = r.__dict__
+            del data["doc"]
+            data["created_at"] = i
+            tagged_sentences.append(data)
+
+        with open(outname, "w") as outfile:
+            json.dump(tagged_sentences, outfile)
+    else:
+        with open(outname, "r") as infile:
+            tagged_sentences = json.load(infile)
+
+    sort_params = next((s for s in sorts if s["qs"] == sort), sorts[0])
+
+    if isinstance(sort_params["key"], list):
+        tagged_sentences = sorted(
+            tagged_sentences,
+            key=lambda k: sum([k[keyname] for keyname in sort_params["key"]]),
+            reverse=reverse,
+        )
+    else:
+        tagged_sentences = sorted(
+            tagged_sentences, key=lambda k: k[sort_params["key"]], reverse=reverse
+        )
+
+    for t in tagged_sentences:
+        print(t["text"])
+
+    #
+    # tests = [
+    #     "this is a test",
+    #     "god is dead",
+    #     "he her she them",
+    #     "israel is bad",
+    #     "the police protect us",
+    #     "where is hope?",
+    # ]
+    # results = analyze_lines(tests)
+    # for r in results:
+    #     print(r)

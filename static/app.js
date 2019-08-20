@@ -6,7 +6,7 @@ const sorts = [
     description: 'Items are ordered by date created',
     orders: ['Oldest', 'Newest']
   },
-  {qs: 'alphabetical', key: 'lower_text', display: 'Alphabetically', orders: ['Lowest', 'Highest']},
+  {qs: 'alphabetical', key: 'lower_text', display: 'Alphabetically', orders: ['Lowest', 'Highest'], description: 'Items are ordered from A to Z'},
   {qs: 'favorites', key: 'favorites', display: 'Total Favorites', orders: ['Lowest', 'Highest']},
   {qs: 'retweets', key: 'retweets', display: 'Total Retweets', orders: ['Lowest', 'Highest']},
   {qs: 'length', key: 'length', display: 'Length of Tweet', orders: ['Shortest', 'Longest']},
@@ -20,10 +20,10 @@ const sorts = [
   {
     qs: 'userposts',
     key: 'total_userposts',
-    display: 'Total All-Time Posts From User',
+    display: 'Total All-Time Posts from User',
     orders: ['Least', 'Most']
   },
-  {qs: 'marx', key: 'marx', display: 'Marxism', orders: ['Least', 'Most']},
+  {qs: 'marx', key: 'marx', display: 'Crudely Understood Marxism', orders: ['Least', 'Most']},
   {qs: 'kafka', key: 'kafka', display: 'Kafkaesque-ness', orders: ['Least', 'Most']},
   {
     qs: 'shame',
@@ -34,7 +34,7 @@ const sorts = [
   {
     qs: 'ted',
     key: 'ted',
-    display: 'Similarity To Values Expressed In TED Talks',
+    display: 'Similarity to Values Expressed in TED Talks',
     orders: ['Least', 'Most']
   },
   {qs: 'emoji', key: 'total_emoji', display: 'Total Emoji', orders: ['Least', 'Most']},
@@ -50,7 +50,7 @@ const sorts = [
   {
     qs: 'stop_words',
     key: 'total_stop',
-    display: 'Percentage of Words which are Filler Words',
+    display: 'Percentage of Words Which Are Filler Words',
     orders: ['Lowest', 'Highest']
   },
   {
@@ -62,19 +62,19 @@ const sorts = [
   {
     qs: 'antisemitism',
     key: 'antisemitism',
-    display: 'Antisemitism as it is Understood by the Right',
+    display: 'Antisemitism as It Is Understood by the Right',
     orders: ['Least', 'Most']
   },
   {
     qs: 'eroticism',
     key: 'erotic',
-    display: 'Eroticism as an approximation of Similarity to a Sentence by Anais Nin',
+    display: 'Eroticism as an Approximation of Similarity to a Sentence by Anais Nin',
     orders: ['Least', 'Most']
   },
   {
     qs: 'drilism',
     key: '__label__dril',
-    display: 'Similarity to @dril IE "drilism"',
+    display: 'Similarity to @dril I.E. "drilism"',
     orders: ['Least', 'Most']
   },
   {qs: 'cop', key: ['__label__CommissBratton'], display: 'Cop-Like', orders: ['Least', 'Most']},
@@ -82,23 +82,24 @@ const sorts = [
   {
     qs: 'neoliberal',
     key: ['__label__ThirdWayTweet', '__label__ChelseaClinton'],
-    display: 'Neoliberalism as determined by proximity to Famous Neoliberals',
+    display: 'Neoliberalism as Determined by Proximity to Famous Neoliberals',
     orders: ['Least', 'Most']
   },
   {
     qs: 'advertising',
     key: ['__label__amazon'],
     display:
-      'Use of Language Similar To Language used by Corporate Social Media Accounts Such as Amazon',
+      'Use of Language Similar to Language Used by Corporate Social Media Accounts Such as Amazon',
     orders: ['Lowest', 'Highest']
   },
   {
     qs: 'gendered',
     key: 'total_gendered',
-    display: 'Total Number of Gendered Words',
+    display: 'Quantity of Gendered Words',
     orders: ['Least', 'Most']
   }
-];
+].sort((a, b) => a.display.localeCompare(b.display));
+// ].sort((a, b) => a.display.length - b.display.length);
 
 let app = new Vue({
   el: '#app',
@@ -108,11 +109,16 @@ let app = new Vue({
     tweets: [],
     sorter: sorts[0],
     sorts: sorts,
-    reversed: false,
+    reversed: true,
     loading: false
   },
   created() {
-    this.fetch();
+    let tweets = localStorage.getItem('tweets');
+    if (tweets) {
+      this.tweets = JSON.parse(tweets);
+    } else {
+      this.fetch();
+    }
   },
   computed: {
     sortedTweets() {
@@ -127,11 +133,13 @@ let app = new Vue({
             // let bvals = this.sorter.key.reduce((j, k) => b[j]+b[k], 0);
             // console.log(avals, bvals);
             // val = avals - bvals;
-            val = a[this.sorter.key[0]] - b[this.sorter.key[0]]
+            val = a[this.sorter.key[0]] - b[this.sorter.key[0]];
           } else {
             val = a[this.sorter.key] - b[this.sorter.key];
           }
         }
+
+        if (val == 0) val = a.tweet_id.localeCompare(b.tweet_id);
 
         if (this.reversed) val *= -1;
 
@@ -160,7 +168,9 @@ let app = new Vue({
             console.log(response);
           } else {
             let tweets = JSON.parse(xhr.responseText);
+            localStorage.setItem('tweets', xhr.responseText);
             this.tweets = tweets;
+            tweets.forEach(t => console.log(t.tweet_id));
           }
         } else {
           console.log('error');

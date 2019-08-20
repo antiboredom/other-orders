@@ -4,6 +4,14 @@ body {
   font-size: 15px;
 }
 
+body, select, button {
+  font-family: georgia;
+}
+
+a {
+  color: red;
+}
+
 .container {
   /* max-width: 1200px; */
   margin: auto;
@@ -37,6 +45,10 @@ table p {
   margin: 0px;
 }
 
+td.link a {
+  text-decoration: none;
+}
+
 .thumb img {
   max-width: 80px;
 }
@@ -45,20 +57,26 @@ table p {
 select {
   /* border: 3px solid #000; */
   color: #000;
-  padding: 5px 10px;
-  margin: 10px;
-  font-family: serif;
+  padding: 3px 5px;
+  margin: 5px;
   font-size: 16px;
-  font-weight: bold;
+  /* font-weight: bold; */
   border-style: outset;
   border-width: 4px;
   text-align: left;
+  background-color: #eee;
+  cursor: pointer;
+  /* text-transform: capitalize; */
   /* border-radius: 10px; */
 }
 
 .sorter.selected {
   color: #fff;
   background-color: #000;
+}
+
+.item-order {
+  border: 1px solid blue;
 }
 
 #loading {

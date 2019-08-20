@@ -1,4 +1,5 @@
 env/
 .env
+*.pyc
 __pycache__/
 start.sh

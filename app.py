@@ -1,12 +1,13 @@
 import json
 import os
-from datetime import datetime
 import re
+from datetime import datetime
+
+import tweepy
+from flask import Flask, jsonify, redirect, render_template, request, session
 
 # import analyzers
 import weirdsort
-import tweepy
-from flask import Flask, jsonify, redirect, render_template, request, session
 
 app = Flask(__name__)
 
@@ -90,6 +91,11 @@ def home():
     # )
 
 
+@app.route("/about")
+def about():
+    return render_template("about.html")
+
+
 @app.route("/tweets")
 def tweets():
     testing = request.args.get("testing", "false")
@@ -125,6 +131,7 @@ def twitter_callback():
 
     return redirect("/")
 
+
 def authed():
     try:
         token, token_secret = session["token"]
@@ -134,6 +141,7 @@ def authed():
         return api.me()
     except Exception as e:
         return False
+
 
 def get_tweets(testing=False):
     if testing == "true":
@@ -162,6 +170,9 @@ def get_tweets(testing=False):
         tweet.retweets = tweet.original["retweet_count"]
         tweet.username = tweet.original["user"]["name"]
         tweet.total_userposts = tweet.original["user"]["statuses_count"]
+        tweet.screen_name = tweet.original["user"]["screen_name"]
+        tweet.name = tweet.original["user"]["name"]
+        tweet.tweet_id = tweet.original["id_str"]
 
     return tweets
 
@@ -186,10 +197,6 @@ def sort_tweets(tweets, sorter, reverse):
 def serialize_tweet(tweet):
     data = tweet.__dict__
     data["media"] = data["original"].get("extended_entities", {}).get("media", [])
-    data["screen_name"] = data["original"]["user"]["screen_name"]
-    data["name"] = data["original"]["user"]["name"]
-    data["tweet_id"] = data["original"]["id"]
     del data["doc"]
     del data["original"]
     return data
-
