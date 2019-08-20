@@ -37,6 +37,7 @@ def tweets():
         tweets = [serialize_tweet(t) for t in tweets]
         return jsonify(tweets)
     except Exception as e:
+        print(e)
         return jsonify({"error": "Could not fetch tweets"})
 
 

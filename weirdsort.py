@@ -190,9 +190,11 @@ class Weirdsort:
         else:
             self.text = text.get(key)
 
+        self.clean_text = re.sub(r"(https?:\/\/.*?|@.*?|RT:)( |$)", "", self.text)
+
         self.text = self.text.replace("&amp;", "&")
         self.lower_text = self.text.lower()
-        self.doc = nlp(self.text)
+        self.doc = nlp(self.clean_text)
         self.total_tokens = len(self.doc)
         self.length = len(self.text)
 
@@ -212,18 +214,21 @@ class Weirdsort:
         self.total_num = 0
         self.total_stop = 0
 
-        parts = []
-        for token in self.doc:
-            parts.append(token.pos_.lower())
-            if token.is_stop:
-                parts.append("stop")
+        if self.total_tokens > 2:
+            parts = []
+            for token in self.doc:
+                parts.append(token.pos_.lower())
+                if token.is_stop:
+                    parts.append("stop")
 
-        counter = Counter(parts)
-        for key, val in counter.items():
-            setattr(self, "total_" + key, val / self.total_tokens)
+            counter = Counter(parts)
+            for key, val in counter.items():
+                setattr(self, "total_" + key, val / self.total_tokens)
 
     def set_entity_count(self):
-        self.total_entities = len(self.doc.ents) / self.total_tokens
+        self.total_entities = 0
+        if self.total_tokens > 2:
+            self.total_entities = len(self.doc.ents) / self.total_tokens
 
     def set_hashtag_count(self):
         self.total_hashtags = self.text.count("#")
