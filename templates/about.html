@@ -16,16 +16,9 @@
   <div class="container" id="welcome">
     <h1>Other Orders</h1>
     <p>
-      Other Orders is a tool for sorting text. It offers 27 different sorting mechanism, following several methodologies. New sorts may be added over time, and <a href="https://github.com/antiboredom/other-orders/issues/new?assignees=&labels=&template=new-sort-request.md&title=New+Sort+Suggestion">suggestions/requests</a> are welcome.
-    </p>
-
-    <p>
-      You may try Other Orders online with your twitter feed, or by
-      <a href="https://github.com/antiboredom/other-orders">downloading a python script</a> to run on your own texts.
-    </p>
+      Other Orders is a tool for sorting text. It consists of 27 methods for ordering phrases, each based on unique criteria. The following sorts are currently available:</p>
 
     <p id="sorts-list">
-      <b>The following sorts are currently available:</b><br>
       <span>
         Alphabetical
       </span>
@@ -109,29 +102,52 @@
       </span>
     </p>
 
-    <p>
-      A full description of each sort can also be <a href="/static/keytootherorders.pdf">found here</a>.
-    </p>
+    <!-- <p> -->
+    <!--   A full description of each sort can also be <a href="/static/keytootherorders.pdf">found here</a>. -->
+    <!-- </p> -->
 
     <p>
-      To begin, <a href="/home">click here to log in with twitter.</a>
+    Recommendation engines like the ones powering the endless feeds on Twitter, Facebook and YouTube, are designed to maximize ad revenue, and therefore to keep you online for as long as possible. In doing so they promote the most reactionary content on their platforms. Yet, these recommendation systems are nothing more than sorting mechanisms.</p><p> Other Orders provides an alternate set of sorts, optimized for other outcomes.
     </p>
+
+    <p class="actions">
+      <a href="/home" class="buttony try-twitter">Try Other Orders On Your Twitter Feed</a>
+      <a href="https://github.com/antiboredom/other-orders" class="buttony download">Download Other Orders</a>
+    </p>
+
+    <h2 style="margin-top: 0">Key to Other Orders</h2>
+    <p><b>Alphabetical:</b> Items are put into lower case and then ordered alphabetically, from A to Z. </p>
+    <p><b>Alphabetical by Username:</b> Items are ordered alphabetically, by the name of the their author. </p>
+    <p><b>Antisemitism as It Is Understood by the Right:</b> Items are ordered by a particular definition of antisemitism, as determined by the item's "negativity" ranking from NLTK's sentiment analysis tool, coupled with occurrences of the word "Israel." That is, if the item has negative sentiment and also contains the word Israel, it is deemed an</p>
+    <p><b>Approximate Quantity of Shame Expressed:</b> Items are ordered relative to their semantic similarity to the phrases that express remorse, regret, shame and embarrassment </p>
+    <p><b>Chronological:</b> Items are ordered by date created. </p>
+    <p><b>Cop-Like:</b> Items are ordered by how confidently they can be classified as phrases written by NYPD Commissioner Bratton. </p>
+    <p><b>Marxist:</b> Items are ordered relative to their semantic similarity to the phrase "workers must seize the means of production." </p>
+    <p><b>Density of Adjectives:</b> Items are ordered by quantity of adjectives as a percentage of total words. </p>
+    <p><b>Density of Nouns:</b> Items are ordered by quantity of nouns, singular or plural, as a percentage of total words. </p>
+    <p><b>Density of People, Places, Brands, Monetary Values and Dates:</b> Items are ordered by quantity of "named entities", words or phrases which may be proper nouns, monetary values or dates. </p>
+    <p><b>Density of Verbs:</b> Items are ordered by quantity of verbs, of any conjugation, as a percentage of total words. </p>
+    <p><b>Eroticism as an Approximation of Similarity to a Phrase by Anaïs Nin:</b> Items are ordered relative to their semantic similarity to the following passage by Anaïs Nin:</b> "They ceased to be three bodies. They became all mouths and fingers and tongues and senses." </p>
+    <p><b>Gothness:</b> Items are ordered by how confidently they can be classified as tweets posted by @sosadtoday. </p>
+    <p><b>Kafkaesque-ness:</b> Items are ordered relative to their semantic similarity to a phrase which is a distilled interpretation of Kafka's writing:</b> "Hope exists, but not for us. My father judges me."</p>
+    <p><b>Length of Text:</b> Items are ordered by total number of characters in text, including spaces. </p>
+    <p><b>Neoliberalism as Determined by Proximity to Famous Neoliberals:</b> Items are ordered by their similarity to tweets by Chelsea Clinton and Third Way Democrats. </p>
+    <p><b>Number of Numbers:</b> Items are ordered by quantity of numbers as a percentage of total words. </p>
+    <p><b>Percentage of Words Which Are Filler Words:</b> Items are ordered by quantity of "stop words", or words which are typically ignored by natural language processing systems. </p>
+    <p><b>Quantity of Gendered Words:</b> Items are ordered by total quantity of gendered words such as "he", "she", and "actress". </p>
+    <p><b>Similarity to @dril I.E. "drilism":</b> Items are ordered by "drilism", or by how closely they resemble tweets by @dril. </p>
+    <p><b>Similarity to Values Expressed in TED Talks:</b> Items are ordered relative to their semantic similarity to a sentiment expressed regularly by Silicon Valley and its apologists.</p>
+    <p><b>Total All-Time Posts from User:</b> Items are ordered by how many posts their author has made over all time. </p>
+    <p><b>Total Emoji:</b> Items are ordered by how many emoji they contain, as determined by the regular expression "[\U00010000-\U0010ffff]". </p>
+    <p><b>Total Favorites:</b> Items are ordered by total favorites they have received. </p>
+    <p><b>Total Hashtags:</b> Items are ordered by total number of hashtags. </p>
+    <p><b>Total Retweets:</b> Items are ordered by total retweets they have received.</p>
+    <p><b>Use of Language Similar to Language Used by Corporate Social Media Accounts Such as Amazon:</b> Items are ordered by their similarity to tweets by Amazon's corporate account. </p>
+
+    <hr>
+
+    <p>Other Orders is by <a href="https://lav.io">Sam Lavigne</a>, made for the <a href="http://webresidencies-solitude-zkm.com/">Akademie Schloss Solitude / ZKM web residency program</a>.</p>
   </div>
-
-  <style>
-    #sorts-list span {
-      background-color: #eee;
-      display: inline-block;
-      padding: 1px;
-      margin: 5px 10px 5px 0px;
-    }
-
-    #welcome {
-      max-width: 800px;
-      margin: auto;
-      padding: 20px;
-    }
-  </style>
 </body>
 
 </html>
