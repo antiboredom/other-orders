@@ -21,6 +21,12 @@
 
     <p><i>Other Orders</i> is a series of ordering mechanisms that can be used to sort twitter streams as well as texts in general. By <a href="https://lav.io">Sam Lavigne</a>.</p>
 
+    <!-- <p>Key:</p> -->
+
+    <!-- <p v&#45;for="s in sorts"> -->
+    <!--   <b><% s.display %>:</b> <% s.description %> -->
+    <!-- </p> -->
+
     <!-- <p>How is the internet sorted?</p> -->
     <!-- <p> -->
     <!--   Much can be said about what should come next in a list. On the internet the order of items as they appear on the screen are determined by a variety of sorting algorithms. -->
@@ -34,7 +40,7 @@
 
     <div class="sorters">
 
-      Sort items:
+      Sorts:
 
       <button v-for="sort in sorts" :class="{sorter: true, selected: sort==sorter}" @click="onSort(sort, $event)">
         <% sort.display %>

@@ -254,6 +254,8 @@ if __name__ == "__main__":
 
         doc = nlp(data)
         sentences = [s.text for s in doc.sents]
+        sentences = [s.strip() for s in sentences]
+        sentences = [s for s in sentences if s!="" and s!='"']
         results = analyze_lines(sentences)
         for i, r in enumerate(results):
             data = r.__dict__

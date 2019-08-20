@@ -11,101 +11,33 @@ app = Flask(__name__)
 
 app.secret_key = secretz.FLASK_SECRET
 
-CONSUMER_KEY =    secretz.TWITTER_CONSUMER_KEY
+CONSUMER_KEY = secretz.TWITTER_CONSUMER_KEY
 CONSUMER_SECRET = secretz.TWITTER_CONSUMER_SECRET
-CALLBACK_URL =    secretz.CALLBACK_URL
-
-sorts = [
-    {"qs": "chronological", "key": "created_at", "display": "Chronologically"},
-    {"qs": "alphabetical", "key": "lower_text", "display": "Alphabetically"},
-    {"qs": "favorites", "key": "favorites", "display": "Total Favorites"},
-    {"qs": "retweets", "key": "retweets", "display": "Total Retweets"},
-    {"qs": "length", "key": "length", "display": "Length"},
-    {"qs": "hashtags", "key": "total_hashtags", "display": "Total Hashtags"},
-    {"qs": "username", "key": "username", "display": "Alphabetically by Username"},
-    {"qs": "userposts", "key": "total_userposts", "display": "Total User Posts"},
-    {"qs": "marx", "key": "marx", "display": "Most Marxist"},
-    {"qs": "kafka", "key": "kafka", "display": "Most Kafkaesque"},
-    {"qs": "shame", "key": "shame", "display": "Shame"},
-    {"qs": "ted", "key": "ted", "display": "TEDness"},
-    {"qs": "emoji", "key": "total_emoji", "display": "Total Emoji"},
-    {"qs": "nouns", "key": "total_noun", "display": "Noun Density"},
-    {"qs": "verbs", "key": "total_verb", "display": "Verb Density"},
-    {"qs": "adjectives", "key": "total_adj", "display": "Adjective Density"},
-    {"qs": "numbers", "key": "total_num", "display": "Number of Numbers"},
-    {
-        "qs": "stop_words",
-        "key": "total_stop",
-        "display": "Density of Filler Words/Percentage of Words Which Are Filler Words",
-    },
-    {"qs": "named_entities", "key": "total_entities", "display": "Proper Noun Density"},
-    {"qs": "antisemitism", "key": "antisemitism", "display": "Antisemitism"},
-    {"qs": "eroticism", "key": "erotic", "display": "Eroticism"},
-    # {
-    #     "qs": "word_length",
-    #     "key": "word_length",
-    #     "display": "Average Word Length",
-    # },
-    {"qs": "drilism", "key": "__label__dril", "display": "dril-ism"},
-    {"qs": "cop", "key": ["__label__CommissBratton"], "display": "Cop-Like"},
-    {"qs": "goth", "key": "__label__sosadtoday", "display": "Gothness"},
-    {
-        "qs": "neoliberal",
-        "key": ["__label__ThirdWayTweet", "__label__ChelseaClinton"],
-        "display": "Neoliberalism",
-    },
-    {
-        "qs": "advertising",
-        "key": ["__label__amazon"],
-        "display": "Similarity To Corporate Social Media Accounts",
-    },
-    {"qs": "gendered", "key": "total_gendered", "display": "Gendered"},
-]
+CALLBACK_URL = secretz.CALLBACK_URL
 
 
 @app.route("/")
+def index():
+    return render_template("about.html")
+
+
+@app.route("/home")
 def home():
     if not authed():
         return redirect("/auth")
 
     return render_template("index_vue.html")
 
-    # testing = request.args.get("testing", "false")
-    # tweets = get_tweets(testing=testing)
-    #
-    # reverse = request.args.get("reverse", "false") == "true"
-    # sorter = request.args.get("sort", "chronological")
-    #
-    # tweets = sort_tweets(tweets, sorter, reverse)
-    #
-    # # return jsonify(tweets)
-    # return render_template(
-    #     "index.html",
-    #     tweets=tweets,
-    #     reverse=reverse,
-    #     sorter=sorter,
-    #     testing=testing,
-    #     sorts=sorts,
-    # )
-
-
-@app.route("/about")
-def about():
-    return render_template("about.html")
-
 
 @app.route("/tweets")
 def tweets():
     testing = request.args.get("testing", "false")
-    tweets = get_tweets(testing=testing)
-    tweets = [serialize_tweet(t) for t in tweets]
-    return jsonify(tweets)
-    # try:
-    #     tweets = get_tweets(testing=testing)
-    #     tweets = [t.__dict__ for t in tweets]
-    #     return jsonify(tweets)
-    # except Exception as e:
-    #     return jsonify({"error": "Could not fetch tweets"})
+    try:
+        tweets = get_tweets(testing=testing)
+        tweets = [serialize_tweet(t) for t in tweets]
+        return jsonify(tweets)
+    except Exception as e:
+        return jsonify({"error": "Could not fetch tweets"})
 
 
 @app.route("/auth")
@@ -127,7 +59,7 @@ def twitter_callback():
     auth.get_access_token(verifier)
     session["token"] = (auth.access_token, auth.access_token_secret)
 
-    return redirect("/")
+    return redirect("/home")
 
 
 def authed():
