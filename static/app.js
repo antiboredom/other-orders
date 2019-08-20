@@ -214,7 +214,7 @@ let app = new Vue({
     tweets: [],
     sorter: sorts[0],
     sorts: sorts,
-    reversed: true,
+    reversed: false,
     loading: false
   },
   created() {
@@ -275,7 +275,6 @@ let app = new Vue({
             let tweets = JSON.parse(xhr.responseText);
             localStorage.setItem('tweets', xhr.responseText);
             this.tweets = tweets;
-            tweets.forEach(t => console.log(t.tweet_id));
           }
         } else {
           console.log('error');
