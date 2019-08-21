@@ -6,8 +6,17 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
   <title>Other Orders</title>
-  <meta name="description" content="">
-  <meta name="author" content="">
+  <meta name="description" content="A tool for sorting text" />
+  <meta name="author" content="Sam Lavigne" />
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="Other Orders">
+  <meta name="twitter:description" content="A tool for sorting text">
+  <meta name="twitter:image" content="https://otherorders.net/static/share.png">
+  <meta property="og:title" content="Other Orders" />
+  <meta property="og:type" content="article" />
+  <meta property="og:url" content="https://otherorders.net" />
+  <meta property="og:image" content="https://otherorders.net/static/share.png">
+  <meta property="og:description" content="A tool for sorting text" />
 
   <link rel="stylesheet" href="/static/style.css?v=1.0">
   <script src="/static/vue.js"></script>
@@ -22,33 +31,12 @@
       <p>by <a href="https://lav.io">Sam Lavigne</a> / <a href="/">About</a></p>
     </div>
 
-    <!-- <p><i>Other Orders</i> is a series of ordering mechanisms that can be used to sort twitter streams as well as texts in general. By <a href="https://lav.io">Sam Lavigne</a>.</p> -->
-
-    <!-- <p>Key:</p> -->
-
-    <!-- <p v&#45;for="s in sorts"> -->
-    <!--   <b><% s.display %>:</b> <% s.description %> -->
-    <!-- </p> -->
-
-    <!-- <p>How is the internet sorted?</p> -->
-    <!-- <p> -->
-    <!--   Much can be said about what should come next in a list. On the internet the order of items as they appear on the screen are determined by a variety of sorting algorithms. -->
-    <!-- </p> -->
-    <!--  -->
-    <!-- <p> -->
-    <!-- A text is usually sorted semantically, that is, letters, words, sentences, paragraphs and chapters are ordered according to the logic of the author. -->
-    <!-- </p> -->
-
-    <!-- <hr> -->
-
     <div class="sorters">
 
       Sorts:
 
       <button v-for="sort in sorts" :class="{sorter: true, selected: sort==sorter}" @click="onSort(sort, $event)">
         <% sort.display %>
-        <!-- <span v&#45;if="reversed">From <% sort.orders[1] %> to <% sort.orders[0] %></span> -->
-        <!-- <span v&#45;else>From <% sort.orders[0] %> to <% sort.orders[1] %></span> -->
       </button>
 
       <select class="item-order" v-model="reversed">
@@ -66,7 +54,6 @@
         <th>Content</th>
         <th>Favorites</th>
         <th>Retweets</th>
-        <!-- <th><% sorter.display %></th> -->
         <th></th>
       </tr>
       <tr v-for="tweet in sortedTweets">
@@ -78,7 +65,6 @@
         </td>
         <td class="fav"><% tweet.favorites %></td>
         <td class="retweet"><% tweet.retweets %></td>
-        <!-- <td><% tweet[sorter.key] %></td> -->
         <td class="link"><a :href="'https://twitter.com/' + tweet.screen_name + '/status/' + tweet.tweet_id" target="_blank">&#8627;</a></td>
       </tr>
     </table>
