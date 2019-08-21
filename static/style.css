@@ -162,8 +162,11 @@ select {
   .container {
     margin: 10px;
   }
-  th { display: none;
+
+  th {
+    display: none;
   }
+
   td {
     display: block;
     border: 0;
@@ -180,5 +183,12 @@ select {
 
   .retweet::after {
     content: " retweets";
+  }
+
+  .actions .buttony {
+    margin: 10px;
+    padding: 7px;
+    display: block;
+    width: auto;
   }
 }
