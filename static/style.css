@@ -15,8 +15,6 @@ a {
 }
 
 .container {
-  /* max-width: 1200px; */
-  margin: auto;
   margin: 40px;
 }
 
@@ -161,10 +159,15 @@ select {
 }
 
 @media (max-width: 768px) {
-  td,
-  th {
-    display: table-row;
+  .container {
+    margin: 10px;
+  }
+  th { display: none;
+  }
+  td {
+    display: block;
     border: 0;
+    padding: 3px;
   }
 
   tr {
