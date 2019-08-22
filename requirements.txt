@@ -7,8 +7,6 @@ Click==7.0
 cycler==0.10.0
 cymem==2.0.2
 deep-plots==0.1.1
-en-core-web-lg==2.1.0
-en-core-web-sm==2.1.0
 fasttext==0.9.1
 Flask==1.1.1
 gast==0.2.2
