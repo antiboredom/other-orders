@@ -1,4 +1,5 @@
 import re
+import os
 import pickle
 from collections import Counter
 import numpy as np
@@ -13,6 +14,7 @@ import sentencepiece as spm
 use_tf = True
 
 if use_tf:
+    os.environ["TFHUB_CACHE_DIR"] = '/tmp/tfhub_modules'
     import tensorflow as tf
     import tensorflow_hub as hub
 
@@ -86,6 +88,7 @@ sorts = [
 fast_model = fasttext.load_model("model_tweets.bin")
 sentiment_analyzer = SentimentIntensityAnalyzer()
 nlp = spacy.load("en_core_web_sm")
+nlp.max_length = 3000000
 
 
 if use_tf:
