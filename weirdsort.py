@@ -35,10 +35,12 @@ archetypes = [
         "erotic",
         "They ceased to be three bodies. They became all mouths and fingers and tongues and senses. Their mouths sought another mouth, a nipple, a clitoris. They lay entangled, moving very slowly. They kissed until the kissing became a torture and the body grew restless. Their hands always found yielding flesh, an opening.",
     ),
-    ("shame", ". I'm sorry. I apologize. I feel regret, shame and embarrassment."),
+    ("shame", "I'm sorry. I apologize. I feel regret, shame and embarrassment."),
+    ("apocalyptic", "The end of the world is coming."),
 ]
 
 sorts = [
+    {"qs": "apocalyptic", "key": "apocalyptic", "display": "Most Apocalyptic"},
     {"qs": "chronological", "key": "created_at", "display": "Chronologically"},
     {"qs": "alphabetical", "key": "lower_text", "display": "Alphabetically"},
     {"qs": "favorites", "key": "favorites", "display": "Total Favorites"},

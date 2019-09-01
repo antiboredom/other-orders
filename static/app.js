@@ -1,8 +1,15 @@
 const sorts = [
   {
+    qs: 'apocalyptic',
+    key: 'apocalyptic',
+    display: 'Apocalyptic',
+    description: 'Items are ordered by how apocalyptic they are.',
+    orders: ['Most', 'Least']
+  },
+  {
     qs: 'chronological',
     key: 'created_at',
-    display: 'Chronologically',
+    display: 'Chronological',
     description: 'Items are ordered by date created.',
     orders: ['Oldest', 'Newest']
   },
