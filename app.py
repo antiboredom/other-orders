@@ -13,7 +13,6 @@ app.secret_key = secretz.FLASK_SECRET
 
 CONSUMER_KEY = secretz.TWITTER_CONSUMER_KEY
 CONSUMER_SECRET = secretz.TWITTER_CONSUMER_SECRET
-CALLBACK_URL = secretz.CALLBACK_URL
 
 
 @app.route("/")
@@ -43,7 +42,7 @@ def tweets():
 
 @app.route("/auth")
 def auth():
-    auth = tweepy.OAuthHandler(CONSUMER_KEY, CONSUMER_SECRET, CALLBACK_URL)
+    auth = tweepy.OAuthHandler(CONSUMER_KEY, CONSUMER_SECRET, get_callback_url())
     url = auth.get_authorization_url()
     session["request_token"] = auth.request_token["oauth_token"]
     return redirect(url)
@@ -54,7 +53,7 @@ def twitter_callback():
     request_token = session["request_token"]
     del session["request_token"]
 
-    auth = tweepy.OAuthHandler(CONSUMER_KEY, CONSUMER_SECRET, CALLBACK_URL)
+    auth = tweepy.OAuthHandler(CONSUMER_KEY, CONSUMER_SECRET, get_callback_url())
     verifier = request.args.get("oauth_verifier")
     auth.request_token = {"oauth_token": request_token, "oauth_token_secret": verifier}
     auth.get_access_token(verifier)
@@ -66,7 +65,7 @@ def twitter_callback():
 def authed():
     try:
         token, token_secret = session["token"]
-        auth = tweepy.OAuthHandler(CONSUMER_KEY, CONSUMER_SECRET, CALLBACK_URL)
+        auth = tweepy.OAuthHandler(CONSUMER_KEY, CONSUMER_SECRET, get_callback_url())
         auth.set_access_token(token, token_secret)
         api = tweepy.API(auth)
         return api.me()
@@ -80,7 +79,7 @@ def get_tweets(testing=False):
             tweets = json.load(infile)
     else:
         token, token_secret = session["token"]
-        auth = tweepy.OAuthHandler(CONSUMER_KEY, CONSUMER_SECRET, CALLBACK_URL)
+        auth = tweepy.OAuthHandler(CONSUMER_KEY, CONSUMER_SECRET, get_callback_url())
         auth.set_access_token(token, token_secret)
         api = tweepy.API(auth)
 
@@ -131,3 +130,7 @@ def serialize_tweet(tweet):
     del data["doc"]
     del data["original"]
     return data
+
+
+def get_callback_url():
+    return request.url_root + "callback"
