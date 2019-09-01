@@ -5,3 +5,4 @@ venv/
 secretz.py
 __pycache__/
 start.sh
+.DS_Store
