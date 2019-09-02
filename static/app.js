@@ -234,7 +234,7 @@ let app = new Vue({
     tweets: [],
     sorter: sorts[0],
     sorts: sorts,
-    reversed: false,
+    reversed: true,
     loading: false
   },
   created() {
