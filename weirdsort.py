@@ -41,6 +41,8 @@ archetypes = [
 
 sorts = [
     {"qs": "apocalyptic", "key": "apocalyptic", "display": "Most Apocalyptic"},
+    {"qs": "exclamatory", "key": "exclamatory", "display": "Most Exclamatory"},
+    {"qs": "questioning", "key": "questioning", "display": "Most Questioning"},
     {"qs": "chronological", "key": "created_at", "display": "Chronologically"},
     {"qs": "alphabetical", "key": "lower_text", "display": "Alphabetically"},
     {"qs": "favorites", "key": "favorites", "display": "Total Favorites"},
@@ -211,6 +213,8 @@ class Weirdsort:
         self.set_entity_count()
         self.rank_antisemitism()
         self.set_hashtag_count()
+        self.set_exclamatory()
+        self.set_questioning()
 
     def set_pos_count(self):
         self.total_noun = 0
@@ -254,6 +258,17 @@ class Weirdsort:
 
     def set_emoji_count(self):
         self.total_emoji = len(re.findall(r"[\U00010000-\U0010ffff]", self.text))
+
+    def set_exclamatory(self):
+        exclam_weight = 5
+        self.exclamatory = 0
+        self.exclamatory += self.text.count("!") * exclam_weight
+        text = [t.text for t in self.doc if t.text==t.text.upper() and len(t.text) > 1 and t.text != 'RT']
+        totals = [len(t) for t in text if len(t) > 1]
+        self.exclamatory += sum(totals)
+
+    def set_questioning(self):
+        self.questioning = self.text.count('?')
 
     def rank_antisemitism(self):
         self.antisemitism = -1
@@ -332,14 +347,3 @@ if __name__ == "__main__":
     for t in tagged_sentences:
         print(t["text"])
 
-    # tests = [
-    #     "this is a test",
-    #     "god is dead",
-    #     "he her she them",
-    #     "israel is bad",
-    #     "the police protect us",
-    #     "where is hope?",
-    # ]
-    # results = analyze_lines(tests)
-    # for r in results:
-    #     print(r)

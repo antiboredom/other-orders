@@ -1,10 +1,24 @@
 const sorts = [
   {
+    qs: 'questioning',
+    key: 'questioning',
+    display: 'Questioning',
+    description: 'Items are ordered by how questioning they are.',
+    orders: ['Least', 'Most']
+  },
+  {
+    qs: 'exclamatory',
+    key: 'exclamatory',
+    display: 'Exclamatory',
+    description: 'Items are ordered by how how many exclamation marks and upper case characters they contain.',
+    orders: ['Least', 'Most']
+  },
+  {
     qs: 'apocalyptic',
     key: 'apocalyptic',
     display: 'Apocalyptic',
     description: 'Items are ordered by how apocalyptic they are.',
-    orders: ['Most', 'Least']
+    orders: ['Least', 'Most']
   },
   {
     qs: 'chronological',
@@ -217,7 +231,6 @@ let app = new Vue({
   el: '#app',
   delimiters: ['<%', '%>'],
   data: {
-    message: 'Hello Vue!',
     tweets: [],
     sorter: sorts[0],
     sorts: sorts,
