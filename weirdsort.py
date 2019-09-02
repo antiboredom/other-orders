@@ -14,18 +14,9 @@ import sentencepiece as spm
 use_tf = True
 
 if use_tf:
-    os.environ["TFHUB_CACHE_DIR"] = '/tmp/tfhub_modules'
+    os.environ["TFHUB_CACHE_DIR"] = "/tmp/tfhub_modules"
     import tensorflow as tf
     import tensorflow_hub as hub
-
-# with open("capitol.txt", "r") as infile:
-#     marx = "\n".join(infile.readlines()[0:200])
-#
-# with open("before_the_law.txt", "r") as infile:
-#     kafka = infile.read()
-#
-# with open("ted.txt", "r") as infile:
-#     ted = "\n".join(infile.readlines()[0:10])
 
 archetypes = [
     ("marx", "Workers must seize the means of production."),
@@ -68,11 +59,6 @@ sorts = [
     {"qs": "named_entities", "key": "total_entities", "display": "Proper Noun Density"},
     {"qs": "antisemitism", "key": "antisemitism", "display": "Antisemitism"},
     {"qs": "eroticism", "key": "erotic", "display": "Eroticism"},
-    # {
-    #     "qs": "word_length",
-    #     "key": "word_length",
-    #     "display": "Average Word Length",
-    # },
     {"qs": "drilism", "key": "__label__dril", "display": "dril-ism"},
     {"qs": "cop", "key": ["__label__CommissBratton"], "display": "Cop-Like"},
     {"qs": "goth", "key": "__label__sosadtoday", "display": "Gothness"},
@@ -263,12 +249,16 @@ class Weirdsort:
         exclam_weight = 5
         self.exclamatory = 0
         self.exclamatory += self.text.count("!") * exclam_weight
-        text = [t.text for t in self.doc if t.text==t.text.upper() and len(t.text) > 1 and t.text != 'RT']
+        text = [
+            t.text
+            for t in self.doc
+            if t.text == t.text.upper() and len(t.text) > 1 and t.text != "RT"
+        ]
         totals = [len(t) for t in text if len(t) > 1]
         self.exclamatory += sum(totals)
 
     def set_questioning(self):
-        self.questioning = self.text.count('?')
+        self.questioning = self.text.count("?")
 
     def rank_antisemitism(self):
         self.antisemitism = -1
@@ -297,11 +287,26 @@ if __name__ == "__main__":
     import json
     import argparse
 
-    parser = argparse.ArgumentParser(description='Other Orders sorts texts')
+    parser = argparse.ArgumentParser(description="Other Orders sorts texts")
 
-    parser.add_argument('filename')
-    parser.add_argument('--sort', '-s', dest='sortname', required=True, help='Sort type', choices=sorted([s['qs'] for s in sorts]))
-    parser.add_argument('--reverse', '-r', action='store_true', dest='reversed', required=False, default=False, help="Sort from high to low rather than low to high")
+    parser.add_argument("filename")
+    parser.add_argument(
+        "--sort",
+        "-s",
+        dest="sortname",
+        required=True,
+        help="Sort type",
+        choices=sorted([s["qs"] for s in sorts]),
+    )
+    parser.add_argument(
+        "--reverse",
+        "-r",
+        action="store_true",
+        dest="reversed",
+        required=False,
+        default=False,
+        help="Sort from high to low rather than low to high",
+    )
 
     args = parser.parse_args()
 
@@ -346,4 +351,3 @@ if __name__ == "__main__":
 
     for t in tagged_sentences:
         print(t["text"])
-
