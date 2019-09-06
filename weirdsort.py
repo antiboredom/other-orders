@@ -1,10 +1,13 @@
 import re
 import os
+import json
 import pickle
+import argparse
 from collections import Counter
 import numpy as np
 import spacy
 from nltk.sentiment.vader import SentimentIntensityAnalyzer
+from nltk.tokenize import sent_tokenize
 from sklearn.metrics.pairwise import cosine_similarity
 import fasttext
 import textstat
@@ -34,8 +37,8 @@ sorts = [
     {"qs": "apocalyptic", "key": "apocalyptic", "display": "Most Apocalyptic"},
     {"qs": "exclamatory", "key": "exclamatory", "display": "Most Exclamatory"},
     {"qs": "questioning", "key": "questioning", "display": "Most Questioning"},
-    {"qs": "chronological", "key": "created_at", "display": "Chronologically"},
-    {"qs": "alphabetical", "key": "lower_text", "display": "Alphabetically"},
+    {"qs": "chronological", "key": "created_at", "display": "Chronological"},
+    {"qs": "alphabetical", "key": "lower_text", "display": "Alphabetical"},
     {"qs": "favorites", "key": "favorites", "display": "Total Favorites"},
     {"qs": "retweets", "key": "retweets", "display": "Total Retweets"},
     {"qs": "length", "key": "length", "display": "Length"},
@@ -54,9 +57,9 @@ sorts = [
     {
         "qs": "stop_words",
         "key": "total_stop",
-        "display": "Density of Filler Words/Percentage of Words Which Are Filler Words",
+        "display": "Density of Filler Words",
     },
-    {"qs": "named_entities", "key": "total_entities", "display": "Proper Noun Density"},
+    {"qs": "named_entities", "key": "total_entities", "display": "Density of Proper Nouns"},
     {"qs": "antisemitism", "key": "antisemitism", "display": "Antisemitism"},
     {"qs": "eroticism", "key": "erotic", "display": "Eroticism"},
     {"qs": "drilism", "key": "__label__dril", "display": "dril-ism"},
@@ -281,12 +284,48 @@ class Weirdsort:
         return str(self.__dict__)
 
 
-if __name__ == "__main__":
-    import sys
-    import os
-    import json
-    import argparse
+def sort_sentences(filename, sortname, reverse=False):
+    outname = filename + ".analysis.json"
 
+    if not os.path.exists(outname):
+        tagged_sentences = []
+
+        with open(filename, "r") as infile:
+            data = infile.read()
+
+        sentences = sent_tokenize(data)
+        sentences = [s.strip() for s in sentences]
+        sentences = [s for s in sentences if s != "" and s != '"']
+        results = analyze_lines(sentences)
+        for i, r in enumerate(results):
+            data = r.__dict__
+            del data["doc"]
+            data["created_at"] = i
+            tagged_sentences.append(data)
+
+        with open(outname, "w") as outfile:
+            json.dump(tagged_sentences, outfile)
+    else:
+        with open(outname, "r") as infile:
+            tagged_sentences = json.load(infile)
+
+    sort_params = next((s for s in sorts if s["qs"] == sortname), sorts[0])
+
+    if isinstance(sort_params["key"], list):
+        tagged_sentences = sorted(
+            tagged_sentences,
+            key=lambda k: sum([k[keyname] for keyname in sort_params["key"]]),
+            reverse=reverse,
+        )
+    else:
+        tagged_sentences = sorted(
+            tagged_sentences, key=lambda k: k[sort_params["key"]], reverse=reverse
+        )
+
+    return tagged_sentences
+
+
+def main():
     parser = argparse.ArgumentParser(description="Other Orders sorts texts")
 
     parser.add_argument("filename")
@@ -310,44 +349,11 @@ if __name__ == "__main__":
 
     args = parser.parse_args()
 
-    filename = args.filename
-    outname = filename + ".analysis.json"
+    sentences = sort_sentences(args.filename, args.sortname, args.reversed)
 
-    if not os.path.exists(outname):
-        tagged_sentences = []
+    for s in sentences:
+        print(s["text"])
 
-        with open(filename, "r") as infile:
-            data = infile.read()
 
-        doc = nlp(data)
-        sentences = [s.text for s in doc.sents]
-        sentences = [s.strip() for s in sentences]
-        sentences = [s for s in sentences if s != "" and s != '"']
-        results = analyze_lines(sentences)
-        for i, r in enumerate(results):
-            data = r.__dict__
-            del data["doc"]
-            data["created_at"] = i
-            tagged_sentences.append(data)
-
-        with open(outname, "w") as outfile:
-            json.dump(tagged_sentences, outfile)
-    else:
-        with open(outname, "r") as infile:
-            tagged_sentences = json.load(infile)
-
-    sort_params = next((s for s in sorts if s["qs"] == args.sortname), sorts[0])
-
-    if isinstance(sort_params["key"], list):
-        tagged_sentences = sorted(
-            tagged_sentences,
-            key=lambda k: sum([k[keyname] for keyname in sort_params["key"]]),
-            reverse=args.reversed,
-        )
-    else:
-        tagged_sentences = sorted(
-            tagged_sentences, key=lambda k: k[sort_params["key"]], reverse=args.reversed
-        )
-
-    for t in tagged_sentences:
-        print(t["text"])
+if __name__ == "__main__":
+    main()
