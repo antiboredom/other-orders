@@ -1,4 +1,4 @@
-const sorts = [
+let sorts = [
   {
     qs: 'questioning',
     key: 'questioning',
@@ -305,4 +305,74 @@ let app = new Vue({
       xhr.send();
     }
   }
+});
+
+
+let ignoredSorts = [
+  "favorites",
+  "retweets",
+  "chronological",
+  "username",
+  "userposts",
+  "emoji",
+  "hashtags",
+  "alphabetical",
+  "antisemitism",
+  "length",
+  "exclamatory",
+]
+
+let frontPage = new Vue({
+  el: '#sorts-and-texts',
+  delimiters: ['<%', '%>'],
+  data: {
+    toptens: [],
+    loading: false,
+    sorts: sorts.filter(s => ignoredSorts.indexOf(s.qs) == -1),
+    sorter: sorts[3],
+    currentBook: {},
+    selectedBook: null,
+  },
+  created() {
+    this.fetch();
+  },
+  computed: {
+    currentList() {
+      return this.currentBook[this.sorter.qs]
+    }
+  },
+  methods: {
+    switchSort(sorter, event) {
+      event.preventDefault();
+      this.sorter = sorter;
+    },
+    switchBook(e) {
+      this.currentBook = this.toptens.find(b => b.title == this.selectedBook)
+    },
+    fetch() {
+      this.loading = true;
+
+      let xhr = new XMLHttpRequest();
+      xhr.open('GET', '/static/all_top_tens.json');
+      xhr.setRequestHeader('Content-Type', 'application/json');
+      xhr.onload = () => {
+        if (xhr.status === 200) {
+          let response = JSON.parse(xhr.responseText);
+          if (response.error) {
+            console.log(response);
+          } else {
+            let toptens = JSON.parse(xhr.responseText);
+            this.currentBook = toptens[0];
+            this.toptens = toptens;
+            this.selectedBook = toptens[0].title;
+          }
+        } else {
+          console.log('error');
+        }
+        this.loading = false;
+      };
+      xhr.send();
+    }
+  }
+
 });

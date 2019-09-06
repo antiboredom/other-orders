@@ -87,6 +87,23 @@ select {
   background-color: #000;
 }
 
+#sorts-list .sorter{
+  font-size: .9em;
+  /* margin: 2px; */
+  /* padding: 2px; */
+  /* border-width: 3px; */
+}
+
+ol {
+  padding: 0;
+  margin: 0;
+  margin-left: 15px;
+}
+ol li {
+  margin-bottom: 10px;
+}
+
+
 .item-order,
 .other-button {
   background-color: blue;
@@ -103,12 +120,13 @@ select {
 
 .actions {
   text-align: center;
+  margin: 30px 0px;
 }
 
 .actions .buttony {
   margin: 10px;
-  width: 40%;
-  padding: 5px;
+  width: 50%;
+  padding: 7px;
   display: inline-block;
   text-align: center;
   color: #fff;
@@ -136,26 +154,76 @@ select {
   font-size: 20px;
 }
 
-#sorts-list span {
-  display: inline-block;
-  padding: 3px;
-  margin: 5px 10px 5px 0px;
-  border-style: outset;
-  border-width: 4px;
-  text-align: left;
-  background-color: #eee;
+#sorts-list {
+  /* display: none; */
 }
 
-#welcome {
-  max-width: 800px;
+#samples {
+  background-color: #000;
+  color: #fff;
+  padding: 5px 20px;
+  max-height: 300px;
+  overflow: scroll;
+}
+
+
+#sorts-list span {
+  display: inline-block;
+  padding: 2px;
+  font-size: 0.9em;
+  margin: 2px 5px 2px 0px;
+  text-align: left;
+  background-color: #eee;
+  border-style: outset;
+  border-width: 3px;
+  /* color: #fff; */
+}
+
+#methodology b {
+  display: inline-block;
+  padding: 2px;
+  font-size: 0.9em;
+  text-align: left;
+  background-color: #eee;
+  border-style: outset;
+  border-width: 3px;
+  font-size: 1.1em;
+}
+
+#methodology p {
+  display: inline;
+  font-size: 0.8em;
+}
+
+.welcome {
+  max-width: 860px;
   margin: auto;
   padding: 20px;
+  /* text-align: right; */
 }
 
 .top {
   display: flex;
   border-bottom: 1px solid #999;
   justify-content: space-between;
+}
+
+.key {
+  background-color: #eee;
+  padding: 2px;
+}
+
+
+#sorts-list {
+  width: 45%;
+  /* margin-right: 2%; */
+  float:left;
+}
+
+#textsssssss {
+  /* position: relative; */
+  width: 45%;
+  float: right;
 }
 
 @media (max-width: 768px) {
@@ -186,9 +254,14 @@ select {
   }
 
   .actions .buttony {
-    margin: 10px;
+    margin: 0px;
+    margin-bottom: 10px;
     padding: 7px;
     display: block;
     width: auto;
+  }
+  #sorts-list, #textsssssss {
+    float: none;
+    width: 100%;
   }
 }
