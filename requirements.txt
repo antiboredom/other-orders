@@ -43,7 +43,7 @@ Pyphen==0.9.5
 PySocks==1.7.0
 python-dateutil==2.8.0
 pytz==2019.2
-PyYAML==5.1.2
+PyYAML==5.4
 repoze.lru==0.7
 requests==2.22.0
 requests-oauthlib==1.2.0
