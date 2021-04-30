@@ -65,7 +65,7 @@ textstat==0.5.6
 thinc==7.0.8
 tqdm==4.33.0
 tweepy==3.8.0
-urllib3==1.25.3
+urllib3==1.25.8
 wasabi==0.2.2
 Werkzeug==0.15.5
 wrapt==1.11.2
