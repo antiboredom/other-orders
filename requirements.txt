@@ -56,7 +56,7 @@ spacy==2.1.8
 srsly==0.0.7
 statsmodels==0.10.1
 tensorboard==1.14.0
-tensorflow==1.14.0
+tensorflow==2.9.3
 tensorflow-estimator==1.14.0
 tensorflow-hub==0.5.0
 termcolor==1.1.0
